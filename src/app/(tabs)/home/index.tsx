@@ -1,4 +1,5 @@
 import AppBar from "@/components/home/appBar";
+import Category from "@/components/home/category";
 import { useNavigation } from "expo-router";
 import { Pressable, ScrollView, Text } from "react-native";
 
@@ -8,6 +9,7 @@ export default function HomeScreen() {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <AppBar />
+      <Category/>
 
       <Text>Home Screen rrrrrrrrrrrrrrrrrrrrrr</Text>
       <Pressable onPress={() => navigation.navigate("details")}>
