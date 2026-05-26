@@ -1,4 +1,4 @@
-import { Ionicons } from "@expo/vector-icons";
+import { Fontisto, Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -12,15 +12,11 @@ export default function AppBar() {
 
       <View style={styles.iconsContainer}>
         <Link href="/home/details">
-          <Ionicons name="search" size={25} color="#545354" />
+          <Fontisto name="bell" size={24} color="black" />
         </Link>
 
         <Link href="/home/details">
-          <Ionicons name="notifications-outline" size={25} color="black" />
-        </Link>
-
-        <Link href="/home/details">
-          <Ionicons name="sunny" size={25} color="black" />
+          <Ionicons name="search" size={25} color="black" />
         </Link>
       </View>
     </View>
@@ -36,5 +32,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logo: { color: "#E2136E", fontSize: 25, fontWeight: "bold" },
-  iconsContainer: { flexDirection: "row", gap: 18 },
+  iconsContainer: { flexDirection: "row", gap: 24 },
 });
