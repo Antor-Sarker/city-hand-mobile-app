@@ -54,11 +54,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     overflowX: "scroll",
     marginHorizontal: 12,
+    marginBottom: 15,
   },
 
   category: {
     borderStyle: "solid",
-    borderColor: "#4d4b4b",
+    borderColor: "#7a7474",
     borderRadius: 5,
     borderWidth: 0.8,
     paddingHorizontal: 5,
