@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { Service } from "@/types/services";
+import { Dispatch, SetStateAction, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 
-export default function Category() {
+export default function Category({
+  setServicesData,
+  setFilterBy,
+}: {
+  setServicesData: Dispatch<SetStateAction<Service[]>>;
+  setFilterBy: Dispatch<SetStateAction<string>>;
+}) {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const categories = [
-    { key: "All Service", value: "all" },
+    { key: "All", value: "all" },
     { key: "Cleaning", value: "cleaning" },
     { key: "Plumbing", value: "plumbing" },
     { key: "Electrical", value: "electrical" },
@@ -16,8 +23,8 @@ export default function Category() {
 
   function handelSelectedCategory(value: string) {
     setSelectedCategory(value);
-
-    // filter data by category
+    setServicesData([]);
+    setFilterBy(value);
   }
 
   return (
@@ -29,6 +36,7 @@ export default function Category() {
       {categories?.map((item) => (
         <TouchableOpacity
           key={item?.key}
+          activeOpacity={0.8}
           style={[
             styles.category,
             selectedCategory === item.value && styles.selectedCategory,
@@ -58,21 +66,19 @@ const styles = StyleSheet.create({
   },
 
   category: {
-    borderStyle: "solid",
-    borderColor: "#7a7474",
-    borderRadius: 5,
-    borderWidth: 0.8,
-    paddingHorizontal: 5,
-    paddingVertical: 2,
+    backgroundColor: "#cd89b226",
+    borderRadius: 8,
+    paddingHorizontal: 9,
+    paddingVertical: 6,
     marginHorizontal: 5,
   },
   content: {
-    fontSize: 15,
-    fontWeight: "300",
-    color: "#4d4b4b",
+    fontSize: 14,
+    fontWeight: "400",
+    color: "#E2136E",
   },
   selectedCategory: {
-    color: "#E2136E",
-    borderColor: "#E2136E",
+    color: "white",
+    backgroundColor: "#E2136E",
   },
 });

@@ -4,18 +4,21 @@ import { ServiceCard } from "@/components/home/serviceCard";
 import { BASE_URL } from "@/config/api";
 import { Service } from "@/types/services";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
+import { ActivityIndicator, FlatList, View } from "react-native";
 
 export default function HomeScreen() {
   const [servicesData, setServicesData] = useState<Service[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [filterBy, setFilterBy] = useState<string>("");
 
   useEffect(() => {
     const fetchServices = async () => {
       try {
         setLoading(true);
 
-        const response = await fetch(`${BASE_URL}/api/service`);
+        const response = await fetch(
+          `${BASE_URL}/api/service?category=${filterBy}`,
+        );
         const data: Service[] = await response.json();
         setServicesData(data);
       } catch (error) {
@@ -26,36 +29,31 @@ export default function HomeScreen() {
     };
 
     fetchServices();
-  }, []);
-
-  if (loading) {
-    return (
-      <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
+  }, [filterBy]);
 
   return (
-    <FlatList
-      data={servicesData}
-      keyExtractor={(item) => item._id}
-      renderItem={({ item }) => <ServiceCard item={item} />}
-      showsVerticalScrollIndicator={false}
-      ListHeaderComponent={
-        <>
-          <AppBar />
-          <Category />
-        </>
-      }
-    />
+    <>
+      <FlatList
+        data={servicesData}
+        keyExtractor={(item) => item._id}
+        renderItem={({ item }) => <ServiceCard item={item} />}
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={
+          <>
+            <AppBar />
+            <Category
+              setServicesData={setServicesData}
+              setFilterBy={setFilterBy}
+            />
+          </>
+        }
+      />
+
+      {loading && (
+        <View style={{ flex: 1 }}>
+          <ActivityIndicator size="large" />
+        </View>
+      )}
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  loaderContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
