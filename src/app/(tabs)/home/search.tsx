@@ -1,9 +1,10 @@
 import SearchReaults from "@/components/search/searchResults";
 import { BASE_URL } from "@/config/api";
+import useDebounce from "@/hooks/useDebounce";
 import { Service } from "@/types/services";
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -20,20 +21,12 @@ export default function SearchScreen() {
   const insets = useSafeAreaInsets();
   const [searchResult, setSearchResult] = useState<Service[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const debounceSearch = useDebounce(input, 500);
 
-  async function handelSearch(searchInput: string) {
-    setInput(searchInput);
-
-    if (searchInput === "") {
-      setSearchResult([]);
-      return;
-    }
-
+  async function handelSearch() {
     try {
       setIsLoading(true);
-      const response = await fetch(
-        `${BASE_URL}/api/service?search=${searchInput}`,
-      );
+      const response = await fetch(`${BASE_URL}/api/service?search=${input}`);
       const data: Service[] = await response.json();
       setSearchResult(data);
     } catch (error) {
@@ -48,6 +41,15 @@ export default function SearchScreen() {
     setSearchResult([]);
   }
 
+  // debounce search
+  useEffect(() => {
+    if (!debounceSearch) {
+      setSearchResult([]);
+      return;
+    }
+    handelSearch();
+  }, [debounceSearch]);
+
   return (
     <>
       <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -61,7 +63,7 @@ export default function SearchScreen() {
           placeholder="Search service"
           autoFocus={true}
           value={input}
-          onChangeText={handelSearch}
+          onChangeText={setInput}
           style={styles.input}
         />
 

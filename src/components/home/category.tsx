@@ -9,7 +9,7 @@ export default function Category({
   setServicesData: Dispatch<SetStateAction<Service[]>>;
   setFilterBy: Dispatch<SetStateAction<string>>;
 }) {
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const categories = [
     { key: "All", value: "all" },
     { key: "Cleaning", value: "cleaning" },
