@@ -15,7 +15,7 @@ export default function AppBar() {
           <Fontisto name="bell" size={24} color="black" />
         </Link>
 
-        <Link href="/home/details">
+        <Link href="/home/search">
           <Ionicons name="search" size={25} color="black" />
         </Link>
       </View>
