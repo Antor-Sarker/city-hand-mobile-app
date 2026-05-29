@@ -11,7 +11,7 @@ export default function AppBar() {
       <Text style={styles.logo}>CityHand</Text>
 
       <View style={styles.iconsContainer}>
-        <Link href="/home/details">
+        <Link href="/home">
           <Fontisto name="bell" size={24} color="black" />
         </Link>
 

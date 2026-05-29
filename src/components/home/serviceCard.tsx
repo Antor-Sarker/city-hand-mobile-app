@@ -10,7 +10,7 @@ export const ServiceCard = ({ item }: { item: Service }) => {
     <TouchableOpacity
       activeOpacity={0.8}
       style={styles.cardContainer}
-      onPress={() => router.push(`/home/details/${item?._id}`)}
+      onPress={() => router.push(`/home/service/${item?._id}`)}
     >
       {/* Image */}
       <Image source={{ uri: imageUrl }} style={styles.cardImage} />

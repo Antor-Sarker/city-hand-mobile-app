@@ -6,11 +6,11 @@ export default function HomeLayout() {
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="search" options={{ headerShown: false }} />
       <Stack.Screen
-        name="details/[serviceId]"
-        options={{ headerShown: true, title: "details" }}
+        name="service/[serviceId]"
+        options={{ headerShown: true, title: "service" }}
       />
       <Stack.Screen
-        name="booking/[serviceId]"
+        name="booking"
         options={{ headerShown: true, title: "booking" }}
       />
     </Stack>

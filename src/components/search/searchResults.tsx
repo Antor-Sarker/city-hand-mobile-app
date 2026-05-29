@@ -8,7 +8,7 @@ export default function SearchReaults({ item }: { item: Service }) {
   return (
     <TouchableOpacity
       activeOpacity={0.5}
-      onPress={() => router.push(`/home/details/${item?._id}`)}
+      onPress={() => router.push(`/home/service/${item?._id}`)}
       style={styles.container}
     >
       <Image source={{ uri: imageURL }} style={styles.cover} />

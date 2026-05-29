@@ -51,7 +51,7 @@ export default function HomeScreen() {
 
       {loading && (
         <View style={{ flex: 1 }}>
-          <ActivityIndicator size="large" />
+          <ActivityIndicator size="large" color={"#E2136E"} />
         </View>
       )}
     </>
