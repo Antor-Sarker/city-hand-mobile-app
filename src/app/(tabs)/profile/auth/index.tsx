@@ -1,7 +1,11 @@
 import AuthHeader from "@/components/auth";
+import { BASE_URL } from "@/config/api";
+import { useAuth } from "@/context/authContext";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { useState } from "react";
 import {
+  ActivityIndicator,
   Pressable,
   StyleSheet,
   Text,
@@ -11,23 +15,70 @@ import {
 } from "react-native";
 
 export default function LoginScreen() {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [hidePassword, setHidePassword] = useState<boolean>(true);
+  const { login } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+
+  interface LoginResponse {
+    accessToken: string;
+    refreshToken: string;
+    userID: string;
+    name: string;
+    email: string;
+    role: string;
+  }
+
+  async function handelLogin() {
+    try {
+      setIsLoading(true);
+      setIsError(false);
+
+      const response = await fetch(`${BASE_URL}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Client-Type": "mobileApp",
+        },
+        body: JSON.stringify({ email: email, password: password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Login failed!");
+      }
+
+      const data: LoginResponse = await response.json();
+      login(data?.accessToken, data?.refreshToken);
+    } catch (error) {
+      setIsError(true);
+      console.log("Login API Error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <>
       <AuthHeader title="Log In" />
 
       <View style={styles.container}>
         {/* ── Form Card ── */}
+        {isError && <Text style={styles.error}>Please Try Again!</Text>}
         <View style={styles.card}>
           {/* Email */}
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>Email Address</Text>
-            <View style={[styles.inputWrapper, styles.inputWrapperFocused]}>
+            <View style={[styles.inputWrapper]}>
               <TextInput
                 style={styles.input}
                 placeholder="john@example.com"
                 placeholderTextColor={"#B0B5CC"}
                 keyboardType="email-address"
                 autoCapitalize="none"
+                onChangeText={setEmail}
               />
             </View>
           </View>
@@ -35,15 +86,25 @@ export default function LoginScreen() {
           {/* Password */}
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>Password</Text>
-            <View style={[styles.inputWrapper, styles.inputWrapperFocused]}>
+            <View style={[styles.inputWrapper]}>
               <TextInput
                 style={[styles.input, { paddingRight: 60 }]}
                 placeholder="password"
                 placeholderTextColor={"#B0B5CC"}
+                secureTextEntry={hidePassword}
+                onChangeText={setPassword}
               />
-              <TouchableOpacity style={styles.showBtn} activeOpacity={0.7}>
+              <TouchableOpacity
+                style={styles.showBtn}
+                activeOpacity={0.7}
+                onPress={() => setHidePassword((prev) => !prev)}
+              >
                 <Text style={styles.showBtnText}>
-                  <Ionicons name="eye-off-outline" size={20} color="black" />
+                  {hidePassword ? (
+                    <Ionicons name="eye-outline" size={20} color="black" />
+                  ) : (
+                    <Ionicons name="eye-off-outline" size={20} color="black" />
+                  )}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -58,10 +119,13 @@ export default function LoginScreen() {
           <Pressable
             style={({ pressed }) => [
               styles.loginBtn,
+              { flexDirection: "row" },
               pressed && styles.loginBtnPressed,
             ]}
+            onPress={handelLogin}
           >
-            <Text style={styles.loginBtnText}>Log In</Text>
+            <Text style={styles.loginBtnText}>Log In{isLoading}</Text>
+            {isLoading && <ActivityIndicator size="small" color={"white"} />}
           </Pressable>
 
           {/* Divider */}
@@ -119,6 +183,14 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
 
+  error: {
+    fontSize: 22,
+    fontWeight: "bold",
+    textAlign: "center",
+    paddingBottom: 10,
+    color: "#E2136E",
+  },
+
   // ── Form fields ──
   fieldGroup: {
     marginBottom: 16,
@@ -138,15 +210,6 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     borderWidth: 1.5,
     borderColor: "#E2E5F5",
-  },
-  inputWrapperFocused: {
-    borderColor: "#E2136E",
-    backgroundColor: "#FFF6FA",
-    shadowColor: "#E2136E",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
-    elevation: 3,
   },
   input: {
     flex: 1,

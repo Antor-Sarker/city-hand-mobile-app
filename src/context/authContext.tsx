@@ -61,7 +61,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const isProfileScreen = segments[1] === "profile";
     const isBookingTab = segments[1] === "myBooking";
     const isBookingConfirmScreen = segments[2] === "booking";
-
+    const isAuthScreen = segments[2] === "auth";
+    if(isAuthScreen) return
+    
     if (!userToken && isBookingTab) {
       router.replace("/(tabs)/profile/auth");
     } else if (!userToken && isBookingConfirmScreen) {
@@ -79,6 +81,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           SecureStore.setItemAsync(STORAGE_KEYS.REFRESH_TOKEN, refreshToken),
         ]);
         setUserToken(accessToken);
+        router.replace("/(tabs)/profile");
       } catch (error) {
         console.error("[Auth] Failed to persist tokens:", error);
         throw new Error("Login failed: could not save credentials securely.");
