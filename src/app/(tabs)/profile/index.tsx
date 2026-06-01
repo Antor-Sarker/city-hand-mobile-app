@@ -2,7 +2,9 @@ import api from "@/api/exios";
 import { tokenStorage } from "@/storage/tokenStorage";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   ScrollView,
   StyleSheet,
   Text,
@@ -14,26 +16,47 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 const PRIMARY = "#E2136E";
 const WHITE = "#FFFFFF";
 
-type User = {
-  fullName: string;
+type UserProfile = {
+  _id: string;
+  name: string;
   email: string;
+  role: string;
   phone: string;
   address: string;
 };
 
-const user: User = {
-  fullName: "John Doe",
-  email: "john@example.com",
-  phone: "+8801700000000",
-  address: "Dhaka, Bangladesh",
+type ProfileResponse = {
+  success: boolean;
+  data: UserProfile;
 };
 
 export default function ProfileScreen() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const insets = useSafeAreaInsets();
+
+  useEffect(() => {
+    const getProfileData = async () => {
+      try {
+        setIsLoading(true);
+
+        const response = await api.get("/api/user/profile");
+        const data: ProfileResponse = response.data;
+        setProfile(data.data);
+      } catch (error) {
+        console.log("failed to fetch profile data", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getProfileData();
+  }, []);
 
   async function handelLogOut() {
     {
       try {
+        setIsLoading(true);
         const refreshToken = await tokenStorage.getRefreshToken();
 
         await api.post(`/api/auth/logout`, {
@@ -44,6 +67,8 @@ export default function ProfileScreen() {
         router.replace("/(tabs)/profile/auth");
       } catch (error) {
         console.log("Logout API failed");
+      } finally {
+        setIsLoading(false);
       }
     }
   }
@@ -53,10 +78,10 @@ export default function ProfileScreen() {
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
         <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{user.fullName.charAt(0)}</Text>
+          <Text style={styles.avatarText}>{profile?.name.charAt(0)}</Text>
         </View>
 
-        <Text style={styles.name}>{user.fullName}</Text>
+        <Text style={styles.name}>{profile?.name}</Text>
       </View>
 
       {/* Account Details */}
@@ -66,14 +91,18 @@ export default function ProfileScreen() {
         <InfoRow
           icon="person-outline"
           label="Full Name"
-          value={user.fullName}
+          value={profile?.name}
         />
 
-        <InfoRow icon="mail-outline" label="Email" value={user.email} />
+        <InfoRow icon="mail-outline" label="Email" value={profile?.email} />
 
-        <InfoRow icon="call-outline" label="Phone" value={user.phone} />
+        <InfoRow icon="call-outline" label="Phone" value={profile?.phone} />
 
-        <InfoRow icon="location-outline" label="Address" value={user.address} />
+        <InfoRow
+          icon="location-outline"
+          label="Address"
+          value={profile?.address}
+        />
       </View>
 
       {/* Actions */}
@@ -86,6 +115,7 @@ export default function ProfileScreen() {
       <TouchableOpacity style={styles.logoutButton} onPress={handelLogOut}>
         <Ionicons name="log-out-outline" size={22} color={WHITE} />
         <Text style={styles.logoutText}>Logout</Text>
+        {isLoading && <ActivityIndicator size="small" color={"white"} />}
       </TouchableOpacity>
     </ScrollView>
   );
@@ -94,7 +124,7 @@ export default function ProfileScreen() {
 type InfoRowProps = {
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
-  value: string;
+  value: string | undefined;
 };
 
 function InfoRow({ icon, label, value }: InfoRowProps) {

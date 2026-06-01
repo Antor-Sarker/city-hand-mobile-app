@@ -124,7 +124,7 @@ export default function LoginScreen() {
             ]}
             onPress={handelLogin}
           >
-            <Text style={styles.loginBtnText}>Log In{isLoading}</Text>
+            <Text style={styles.loginBtnText}>Log In</Text>
             {isLoading && <ActivityIndicator size="small" color={"white"} />}
           </Pressable>
 
