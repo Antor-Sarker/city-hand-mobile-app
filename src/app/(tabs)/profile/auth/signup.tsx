@@ -1,6 +1,9 @@
 import AuthHeader from "@/components/auth";
+import { BASE_URL } from "@/config/api";
 import { router } from "expo-router";
+import { useState } from "react";
 import {
+  ActivityIndicator,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,6 +12,14 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+
+interface FormType {
+  email: string;
+  name: string;
+  password: string;
+  address: string;
+  phone: string;
+}
 
 type FieldType = {
   key: string;
@@ -19,44 +30,54 @@ type FieldType = {
   secureTextEntry?: boolean;
 };
 
+const fields: FieldType[] = [
+  {
+    key: "name",
+    label: "Full Name",
+    placeholder: "John Doe",
+    keyboardType: "default",
+    autoCapitalize: "words",
+  },
+  {
+    key: "phone",
+    label: "Phon e Number",
+    placeholder: "+880 1XXXXXXXXX",
+    keyboardType: "phone-pad",
+    autoCapitalize: "none",
+  },
+  {
+    key: "email",
+    label: "Email Address",
+    placeholder: "john@example.com",
+    keyboardType: "email-address",
+    autoCapitalize: "none",
+  },
+  {
+    key: "password",
+    label: "Password",
+    placeholder: "Min. 8 characters",
+    secureTextEntry: true,
+    autoCapitalize: "none",
+  },
+  {
+    key: "address",
+    label: "Address",
+    placeholder: "Your full address",
+    keyboardType: "default",
+    autoCapitalize: "sentences",
+  },
+];
+
 export default function SignUpScreen() {
-  const fields: FieldType[] = [
-    {
-      key: "name",
-      label: "Full Name",
-      placeholder: "John Doe",
-      keyboardType: "default",
-      autoCapitalize: "words",
-    },
-    {
-      key: "phone",
-      label: "Phone Number",
-      placeholder: "+880 1XXXXXXXXX",
-      keyboardType: "phone-pad",
-      autoCapitalize: "none",
-    },
-    {
-      key: "email",
-      label: "Email Address",
-      placeholder: "john@example.com",
-      keyboardType: "email-address",
-      autoCapitalize: "none",
-    },
-    {
-      key: "password",
-      label: "Password",
-      placeholder: "Min. 8 characters",
-      secureTextEntry: true,
-      autoCapitalize: "none",
-    },
-    {
-      key: "address",
-      label: "Address",
-      placeholder: "Your full address",
-      keyboardType: "default",
-      autoCapitalize: "sentences",
-    },
-  ];
+  const [formData, setFormData] = useState<FormType>({
+    email: "",
+    name: "",
+    password: "",
+    address: "",
+    phone: "",
+  });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
 
   const renderField = (field: FieldType) => {
     return (
@@ -75,11 +96,42 @@ export default function SignUpScreen() {
             keyboardType={field.keyboardType || "default"}
             autoCapitalize={field.autoCapitalize || "none"}
             secureTextEntry={field.secureTextEntry}
+            onChangeText={(text) =>
+              setFormData((prev) => ({ ...prev, [field.key]: text }))
+            }
           />
         </View>
       </View>
     );
   };
+
+  async function handelSignUp() {
+    try {
+      setIsLoading(true);
+      setIsError(false);
+
+      const response = await fetch(`${BASE_URL}/api/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Signup failed!");
+      }
+
+      const data = await response.json();
+      if (data?.success) router.replace("/(tabs)/profile/auth");
+    } catch (error) {
+      setIsError(true);
+      console.log("Signup API Error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return (
     <>
@@ -89,13 +141,20 @@ export default function SignUpScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
+        {isError && <Text style={styles.error}>Please Try Again!</Text>}
+
         <View style={styles.card}>
           {/*render fields */}
           {fields?.map(renderField)}
 
           {/* Submit Button */}
-          <TouchableOpacity style={styles.submitButton} activeOpacity={0.88}>
+          <TouchableOpacity
+            style={styles.submitButton}
+            activeOpacity={0.88}
+            onPress={handelSignUp}
+          >
             <Text style={styles.submitButtonText}>Create Account</Text>
+            {isLoading && <ActivityIndicator size="small" color={"white"} />}
           </TouchableOpacity>
 
           {/* Divider */}
@@ -141,6 +200,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 20,
     elevation: 4,
+  },
+  error: {
+    fontSize: 22,
+    fontWeight: "bold",
+    textAlign: "center",
+    paddingBottom: 10,
+    color: "#E2136E",
   },
 
   fieldWrapper: {
