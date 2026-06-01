@@ -1,4 +1,7 @@
+import api from "@/api/exios";
+import { tokenStorage } from "@/storage/tokenStorage";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import {
   ScrollView,
   StyleSheet,
@@ -27,9 +30,23 @@ const user: User = {
 
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
-  const handleLogout = () => {
-    console.log("logout");
-  };
+
+  async function handelLogOut() {
+    {
+      try {
+        const refreshToken = await tokenStorage.getRefreshToken();
+
+        await api.post(`/api/auth/logout`, {
+          refreshToken,
+        });
+        tokenStorage.clearTokens();
+
+        router.replace("/(tabs)/profile/auth");
+      } catch (error) {
+        console.log("Logout API failed");
+      }
+    }
+  }
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -66,7 +83,7 @@ export default function ProfileScreen() {
       </TouchableOpacity>
 
       {/* Logout */}
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+      <TouchableOpacity style={styles.logoutButton} onPress={handelLogOut}>
         <Ionicons name="log-out-outline" size={22} color={WHITE} />
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>
