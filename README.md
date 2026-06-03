@@ -1,56 +1,275 @@
-# Welcome to your Expo app 👋
+# CityHand Mobile App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A modern local service marketplace mobile application built with React Native Expo, allowing users to discover services, book appointments, manage bookings, and maintain their profiles seamlessly.
 
-## Get started
+## 📱 Overview
 
-1. Install dependencies
+CityHand is a local service provider platform that connects customers with service professionals. The mobile application provides a smooth booking experience, secure authentication, service discovery, and booking management.
 
-   ```bash
-   npm install
-   ```
+This project is part of the CityHand ecosystem, which includes:
 
-2. Start the app
+* Mobile App (React Native Expo)
+* Web Application (Next.js)
+* Backend API (Express.js & MongoDB)
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## 🚀 Quick Start
 
 ```bash
-npm run reset-project
+git clone https://github.com/Antor-Sarker/city-hand-mobile-app.git
+cd city-hand-mobile-app
+npm install
+npx expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-### Other setup steps
+## ⚙️ Installation & Setup
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+### Prerequisites
 
-## Learn more
+Before running the project, make sure you have installed:
 
-To learn more about developing your project with Expo, look at the following resources:
+* Node.js (v20+ recommended)
+* npm
+* Git
+* Expo Go App (for physical device testing)
+* Android Studio (optional for emulator)
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+---
 
-## Join the community
+### 1. Clone the Repository
 
-Join our community of developers creating universal apps.
+```bash
+git clone https://github.com/YOUR_USERNAME/cityhand-mobile.git
+cd cityhand-mobile
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+---
+
+### 3. Configure Environment Variables
+
+Create a `.env` file in the project root:
+
+Example:
+
+```env
+EXPO_PUBLIC_BASE_URL=http://localhost:5000/api
+```
+
+For testing on a physical device:
+
+```env
+EXPO_PUBLIC_BASE_URL=http://192.168.1.100:5000/api
+```
+
+For Live Api:
+
+```env
+EXPO_PUBLIC_BASE_URL=https://city-hand-backend.onrender.com/api
+```
+
+---
+
+### 4. Start Development Server
+
+```bash
+npx expo start
+```
+
+Or
+
+```bash
+npm start
+```
+
+---
+
+### Run on Android
+
+```bash
+npm run android
+```
+
+---
+
+### Run on iOS
+
+```bash
+npm run ios
+```
+
+> Requires macOS and Xcode.
+
+---
+
+## 📱 Testing on Physical Device
+
+1. Install Expo Go from Play Store or App Store.
+2. Run:
+
+```bash
+npx expo start
+```
+
+3. Scan the QR code using Expo Go.
+4. The app will launch directly on your device.
+
+---
+
+## 🔐 Authentication & Authorization
+
+* User Registration (Signup)
+* User Login
+* Access Token Authentication
+* Refresh Token Authentication
+* Protected Routes
+* Authentication Context API
+* Secure Session Management
+* Logout Functionality
+
+---
+
+## ✨ Features
+
+### Home Screen
+
+* Dynamic Service Listing
+* Category-Based Service Filtering
+* Service Search
+* Debounced Search API Calls
+* Horizontal Category Navigation
+* Modern App Bar UI
+* Bottom Tab Navigation
+
+### Service Management
+
+* View Service Details
+* Navigate to Booking Screen
+* Create Service Booking
+
+### Booking Management
+
+* View All My Bookings
+* Edit Booking
+* Cancel Booking
+* Confirm Booking
+* Booking Status Tracking
+
+### Profile Management
+
+* View User Profile
+* Account Information Display
+* Logout Support
+
+---
+
+## 🛠 Tech Stack
+
+### Mobile Application
+
+* React Native
+* Expo SDK
+* TypeScript
+* React Navigation
+* Axios
+* Context API
+
+### Backend
+
+* Node.js
+* Express.js
+* MongoDB
+* JWT Authentication
+* Access Token & Refresh Token
+
+### Web Application
+
+* Next.js
+* JavaScript
+
+---
+
+## 🔄 Authentication Flow
+
+1. User signs up or logs in.
+2. Backend generates Access Token and Refresh Token.
+3. Access Token is attached to API requests using Axios.
+4. Expired Access Tokens are refreshed automatically.
+5. Protected screens are accessible only to authenticated users.
+
+---
+
+## 📸 Main Screens
+
+* Sign In Screen
+* Sign Up Screen
+* Home Screen
+* Services Search
+* Service Details Screen
+* Booking Screen
+* My Bookings Screen
+* Profile Screen
+
+---
+
+## 📋 API Documentation
+
+https://documenter.getpostman.com/view/41187911/2sBXirjoqX
+
+---
+
+## 🔗 Related Repositories
+
+### Backend Repository
+
+https://github.com/Antor-Sarker/city-hand-backend
+
+### Web Frontend Repository
+
+https://github.com/Antor-Sarker/city-hand
+
+---
+
+## 📈 Key Learning Outcomes
+
+* React Native App Development with Expo
+* Secure JWT Authentication
+* Access & Refresh Token Implementation
+* API Integration using Axios
+* Context API State Management
+* Protected Navigation Flow
+* Search Optimization using Debouncing
+* Mobile UI/UX Development
+* Full-Stack Application Architecture
+
+---
+
+## 🔮 Future Improvements
+
+* Push Notifications
+* Real-Time Booking Updates
+* Rating & Review System
+* Chat System
+* Service Provider Dashboard
+* Dark Mode Support
+
+---
+
+## 👨‍💻 Author
+
+Antor Sarker
+
+Full Stack & React Native Developer
+
+Tech Stack:
+React Native • Expo • TypeScript • Node.js • Next.js • Express.js • MongoDB
