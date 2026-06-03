@@ -69,7 +69,10 @@ export default function ServiceScreen() {
       pathname: "/home/booking",
       params: {
         serviceId: serviceData?._id,
-        planType: isBasic ? "basic" : plans[selected].name,
+        serviceName: serviceData?.title,
+        serviceCategory: serviceData?.categoryLabel,
+        prices: JSON.stringify(serviceData?.price),
+        selectedPrice: isBasic ? "basic" : plans[selected].name,
       },
     });
   }
