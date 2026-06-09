@@ -2,6 +2,10 @@
 
 A modern local service marketplace mobile application built with React Native Expo, allowing users to discover services, book appointments, manage bookings, and maintain their profiles seamlessly.
 
+
+## Demo Video
+[🎥 Watch Demo Video](https://drive.google.com/file/d/1AuNO1FXJ0NFBoF-j6e-ysaJZyvuKPS0r/view?usp=sharing)
+
 ## 📱 Overview
 
 CityHand is a local service provider platform that connects customers with service professionals. The mobile application provides a smooth booking experience, secure authentication, service discovery, and booking management.
